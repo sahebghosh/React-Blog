@@ -6,7 +6,8 @@ const useFetch = (url) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(url)
+    const abortController = new AbortController(); // this is used to abort the fetch request on component is unmounted.
+    fetch(url, { signal: abortController.signal })
       .then((res) => {
         if (!res.ok) {
           // error coming back from server
@@ -20,10 +21,16 @@ const useFetch = (url) => {
         setError(null);
       })
       .catch((err) => {
-        // auto catches network / connection error
-        setIsPending(false);
-        setError(err.message);
+        if (err.name === "AbortError") {
+          console.log("REST API fetch aborted");
+        } else {
+          // auto catches network / connection error
+          setIsPending(false);
+          setError(err.message);
+        }
       });
+    // abort the fetch
+    return () => abortController.abort();
   }, [url]);
 
   return { data, isPending, error };
