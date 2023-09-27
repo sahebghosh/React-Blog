@@ -11,7 +11,7 @@ const useFetch = (url) => {
       .then((res) => {
         if (!res.ok) {
           // error coming back from server
-          throw Error("Could not fetch the data for that resource");
+          throw Error("Could not fetch the data for that resource.");
         }
         return res.json();
       })
@@ -22,7 +22,7 @@ const useFetch = (url) => {
       })
       .catch((err) => {
         if (err.name === "AbortError") {
-          console.log("REST API fetch aborted");
+          console.log("REST API fetch aborted.");
         } else {
           // auto catches network / connection error
           setIsPending(false);
